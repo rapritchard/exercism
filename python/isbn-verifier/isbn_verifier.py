@@ -4,11 +4,12 @@ def verify(isbn):
     if len(formatted_isbn) != 10:
         return False
 
-    check_sum = sum(int(formatted_isbn[i]) * (10 - i) for i in range(8))
-    check_sum %= 11
-    check_digit = 11 - check_sum
-
-    if check_digit == 0:
-        return True
-    else:
+    if not formatted_isbn[:-1].isdigit():
         return False
+
+    check_sum = formatted_isbn[-1]
+    if not check_sum.isdigit() and check_sum != 'X':
+        return False
+    
+    isbn_data = zip(range(10, 0, -1), formatted_isbn)
+    return 0 == sum([index * (int(number) if number != 'X' else 10) for index, number in isbn_data]) % 11
